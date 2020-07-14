@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -40,15 +41,29 @@ public class Home extends JFrame{
 	private int index = 0;
 	private boolean isPrologue = false;
 
+	private ArrayList<Image> playerLoadingImgList = new ArrayList<>();
+	private boolean isPlayerLoading = false;
+
 	private ArrayList<Image> loadingImgList = new ArrayList<>();
 	private boolean isLoading = false;
 
-	private boolean isAtHome = false;
+	private boolean isAtHome1 = false;
 	private boolean isPlayerActivated = false;
 	private Image departed100 = new ImageIcon(Main.class.getResource("../imgs/100departed.png")).getImage();
 
+	private boolean isAtHome2 = false;
+	private int currView = 0;
+	private Image homepage;
+	private ImageIcon goLeftButtonEntered = new ImageIcon(Main.class.getResource("../imgs/goLeftButtonEntered.png"));
+	private ImageIcon goLeftButtonDefault = new ImageIcon(Main.class.getResource("../imgs/goLeftButtonDefault.png"));
+	private ImageIcon goRightButtonEntered = new ImageIcon(Main.class.getResource("../imgs/goRightButtonEntered.png"));
+	private ImageIcon goRightButtonDefault = new ImageIcon(Main.class.getResource("../imgs/goRightButtonDefault.png"));
+	private JButton goLeftButton = new JButton(goLeftButtonDefault);
+	private JButton goRightButton = new JButton(goRightButtonDefault);
+
+
 	Music music = new Music();
-	
+
 	public Home() {
 		setUndecorated(true);
 		setTitle("Ship Is Here For You");
@@ -61,6 +76,7 @@ public class Home extends JFrame{
 		setLayout(null);
 
 		addPrologueList();
+		addPlayerLoadingImgList();
 		addLoadingImgList();
 
 		addExitButton();
@@ -68,7 +84,7 @@ public class Home extends JFrame{
 		addOpenButton();
 		addQuitButton();
 
-//		music.musicPlay("src/musics/introBGM.wav");
+		//		music.musicPlay("src/musics/introBGM.wav");
 
 		menuBar.setBounds(0, 0, 1920, 30)  ;
 		add(menuBar);
@@ -165,7 +181,6 @@ public class Home extends JFrame{
 		add(quitButton);		
 	}
 
-
 	private void addPrologueList() {
 		prologueList.add(new ImageIcon(Main.class.getResource("../imgs/prolog1.png")).getImage());
 		prologueList.add(new ImageIcon(Main.class.getResource("../imgs/prolog2.png")).getImage());
@@ -177,7 +192,7 @@ public class Home extends JFrame{
 
 	public void prologue() {
 		isPrologue = true;
-//		music.musicPlay("src/musics/prologueBGM.wav");
+		//		music.musicPlay("src/musics/prologueBGM.wav");
 		backgroundButtonSetting();
 		add(backgroundButton);
 	}
@@ -192,43 +207,109 @@ public class Home extends JFrame{
 				backgroundButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
 			}
 			public void mousePressed(MouseEvent e) {
-				if (index < prologueList.size()-1)
-					index++;
-				else {
-					isPrologue = false;
-					index = 0;
-					loading();
+				if (isPrologue) {
+					if (index < prologueList.size()-1)
+						index++;
+					else {
+						isPrologue = false;
+						index = 0;
+						isPlayerLoading = true;
+						playerLoading();
+					}
+				} else if(isAtHome1) {
+					isLoading = true;
+						loading();
 				}
 			}
-		});		
+		});
+		backgroundButton.addKeyListener(new Key() {
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyCode() == 32) {
+					if (index < prologueList.size()-1)
+						index++;
+					else {
+						isPrologue = false;
+						index = 0;
+						playerLoading();
+					}
+				}
+			}
+		});
 	}
 
-	private void addLoadingImgList() {
-		loadingImgList.add(new ImageIcon(Main.class.getResource("../imgs/0.png")).getImage());		
-		loadingImgList.add(new ImageIcon(Main.class.getResource("../imgs/0.png")).getImage());		
-		loadingImgList.add(new ImageIcon(Main.class.getResource("../imgs/0.png")).getImage());		
-		loadingImgList.add(new ImageIcon(Main.class.getResource("../imgs/0.png")).getImage());		
-		loadingImgList.add(new ImageIcon(Main.class.getResource("../imgs/0.png")).getImage());		
-		loadingImgList.add(new ImageIcon(Main.class.getResource("../imgs/0.png")).getImage());		
-		loadingImgList.add(new ImageIcon(Main.class.getResource("../imgs/0.png")).getImage());		
-		loadingImgList.add(new ImageIcon(Main.class.getResource("../imgs/0.png")).getImage());		
-		loadingImgList.add(new ImageIcon(Main.class.getResource("../imgs/0.png")).getImage());		
-		loadingImgList.add(new ImageIcon(Main.class.getResource("../imgs/0.png")).getImage());		
-		loadingImgList.add(new ImageIcon(Main.class.getResource("../imgs/0.png")).getImage());		
-		loadingImgList.add(new ImageIcon(Main.class.getResource("../imgs/1.png")).getImage());
-		loadingImgList.add(new ImageIcon(Main.class.getResource("../imgs/2.png")).getImage());		
-		loadingImgList.add(new ImageIcon(Main.class.getResource("../imgs/3.png")).getImage());		
-		loadingImgList.add(new ImageIcon(Main.class.getResource("../imgs/4.png")).getImage());		
-		loadingImgList.add(new ImageIcon(Main.class.getResource("../imgs/5.png")).getImage());
-		loadingImgList.add(new ImageIcon(Main.class.getResource("../imgs/6.png")).getImage());
-		loadingImgList.add(new ImageIcon(Main.class.getResource("../imgs/7.png")).getImage());
-		loadingImgList.add(new ImageIcon(Main.class.getResource("../imgs/100departed.png")).getImage());
+	private void addPlayerLoadingImgList() {
+		playerLoadingImgList.add(new ImageIcon(Main.class.getResource("../imgs/0.png")).getImage());		
+		playerLoadingImgList.add(new ImageIcon(Main.class.getResource("../imgs/0.png")).getImage());		
+		playerLoadingImgList.add(new ImageIcon(Main.class.getResource("../imgs/0.png")).getImage());		
+		playerLoadingImgList.add(new ImageIcon(Main.class.getResource("../imgs/0.png")).getImage());		
+		playerLoadingImgList.add(new ImageIcon(Main.class.getResource("../imgs/0.png")).getImage());		
+		playerLoadingImgList.add(new ImageIcon(Main.class.getResource("../imgs/0.png")).getImage());		
+		playerLoadingImgList.add(new ImageIcon(Main.class.getResource("../imgs/0.png")).getImage());		
+		playerLoadingImgList.add(new ImageIcon(Main.class.getResource("../imgs/0.png")).getImage());		
+		playerLoadingImgList.add(new ImageIcon(Main.class.getResource("../imgs/0.png")).getImage());		
+		playerLoadingImgList.add(new ImageIcon(Main.class.getResource("../imgs/0.png")).getImage());		
+		playerLoadingImgList.add(new ImageIcon(Main.class.getResource("../imgs/0.png")).getImage());		
+		playerLoadingImgList.add(new ImageIcon(Main.class.getResource("../imgs/1.png")).getImage());
+		playerLoadingImgList.add(new ImageIcon(Main.class.getResource("../imgs/2.png")).getImage());		
+		playerLoadingImgList.add(new ImageIcon(Main.class.getResource("../imgs/3.png")).getImage());		
+		playerLoadingImgList.add(new ImageIcon(Main.class.getResource("../imgs/4.png")).getImage());		
+		playerLoadingImgList.add(new ImageIcon(Main.class.getResource("../imgs/5.png")).getImage());
+		playerLoadingImgList.add(new ImageIcon(Main.class.getResource("../imgs/6.png")).getImage());
+		playerLoadingImgList.add(new ImageIcon(Main.class.getResource("../imgs/7.png")).getImage());
+		playerLoadingImgList.add(new ImageIcon(Main.class.getResource("../imgs/100departed.png")).getImage());
+	}
+
+	public void playerLoading() {
+		backgroundButton.setVisible(false);
+		if (index < playerLoadingImgList.size()) {
+			index++;
+			try {
+				TimeUnit.MILLISECONDS.sleep(300);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		else {
+			isPlayerLoading = false;
+			try {
+				TimeUnit.SECONDS.sleep(2);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			index = 0;
+			atHome1();
+		}
+	}
+
+	public void atHome1() {
+		isAtHome1 = true;
+		isPlayerActivated = true;
+		backgroundButton.setVisible(true);
+		add(backgroundButton);
+	}
+
+	public void atHome2() {
+		System.out.println("visited");
+		isAtHome2 = true;
+		backgroundButton.setVisible(false);
+
+		if (currView == 0) {
+
+		} else if (currView == 1) {
+
+		} else {
+
+		}
+
+				addGoLeftButton();
+				addGoRightButton();
+
 	}
 
 	public void loading() {
-		isLoading = true;
+		isAtHome1 = false;
 		backgroundButton.setVisible(false);
-		if (index < loadingImgList.size()) {
+		if (index < loadingImgList.size()-1) {
 			index++;
 			try {
 				TimeUnit.MILLISECONDS.sleep(300);
@@ -239,21 +320,75 @@ public class Home extends JFrame{
 		else {
 			isLoading = false;
 			try {
-				TimeUnit.SECONDS.sleep(2);
+				TimeUnit.MILLISECONDS.sleep(300);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 			index = 0;
-			atHome();
+			atHome2();
 		}
 	}
 
-	public void atHome() {
-		isAtHome = true;
-		isPlayerActivated = true;
-		backgroundButton.setVisible(true);
+	private void addLoadingImgList() {
+		loadingImgList.add(new ImageIcon(Main.class.getResource("../imgs/loadingImgs/loading00.png")).getImage());		
+		loadingImgList.add(new ImageIcon(Main.class.getResource("../imgs/loadingImgs/loading01.png")).getImage());		
+		loadingImgList.add(new ImageIcon(Main.class.getResource("../imgs/loadingImgs/loading02.png")).getImage());		
+		loadingImgList.add(new ImageIcon(Main.class.getResource("../imgs/loadingImgs/loading03.png")).getImage());		
+		loadingImgList.add(new ImageIcon(Main.class.getResource("../imgs/loadingImgs/loading04.png")).getImage());		
+		loadingImgList.add(new ImageIcon(Main.class.getResource("../imgs/loadingImgs/loading05.png")).getImage());		
+		loadingImgList.add(new ImageIcon(Main.class.getResource("../imgs/loadingImgs/loading06.png")).getImage());		
+		loadingImgList.add(new ImageIcon(Main.class.getResource("../imgs/loadingImgs/loading07.png")).getImage());		
+		loadingImgList.add(new ImageIcon(Main.class.getResource("../imgs/loadingImgs/loading08.png")).getImage());		
+		loadingImgList.add(new ImageIcon(Main.class.getResource("../imgs/loadingImgs/loading09.png")).getImage());		
+		loadingImgList.add(new ImageIcon(Main.class.getResource("../imgs/loadingImgs/loading10.png")).getImage());		
+		loadingImgList.add(new ImageIcon(Main.class.getResource("../imgs/loadingImgs/loading11.png")).getImage());
+		loadingImgList.add(new ImageIcon(Main.class.getResource("../imgs/loadingImgs/loading12.png")).getImage());		
 	}
-
+	
+		private void addGoLeftButton() {
+			goLeftButton.setBounds(0, 0, 70, 1080);
+			goLeftButton.setBorderPainted(false);
+			goLeftButton.setContentAreaFilled(false);
+			goLeftButton.setFocusPainted(false);
+			goLeftButton.addMouseListener(new MouseAdapter() {
+				public void mouseEntered(MouseEvent e) {
+					goLeftButton.setIcon(goLeftButtonEntered);
+					goLeftButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+				}
+				public void mouseExited(MouseEvent e) {
+					goLeftButton.setIcon(goLeftButtonDefault);
+					goLeftButton.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+				}
+				public void mousePressed(MouseEvent e) {
+					
+				}
+			});
+			goLeftButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+			add(goLeftButton);	
+		}
+	
+		private void addGoRightButton() {
+			goRightButton.setBounds(1850, 0, 70, 1080);
+			goRightButton.setBorderPainted(false);
+			goRightButton.setContentAreaFilled(false);
+			goRightButton.setFocusPainted(false);
+			goRightButton.addMouseListener(new MouseAdapter() {
+				public void mouseEntered(MouseEvent e) {
+					goRightButton.setIcon(goRightButtonEntered);
+					goRightButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+				}
+				public void mouseExited(MouseEvent e) {
+					goRightButton.setIcon(goRightButtonDefault);
+					goRightButton.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+				}
+				public void mousePressed(MouseEvent e) {
+					
+				}
+			});
+			goRightButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+			add(goRightButton);	
+		}
+		
 	public void paint(Graphics g) {
 		screenImage = createImage(Main.SCREEN_WIDTH, Main.SCREEN_HEIGHT);
 		screenGraphic = screenImage.getGraphics();
@@ -265,16 +400,21 @@ public class Home extends JFrame{
 		g.drawImage(background, 0, 0, null);
 		if (isPrologue) {
 			g.drawImage(prologueList.get(index), 0, 290, null);
-		} else if (isLoading) {
+		} else if (isPlayerLoading) {
 			for (int i = 0; i < index; i++) {
-				boolean tmp = (i < loadingImgList.size()-1) ? g.drawImage(loadingImgList.get(i), 0, (i+1) * 30, null) 
-						: g.drawImage(loadingImgList.get(i), 0, 290, null);
+				boolean tmp = (i < playerLoadingImgList.size()-1) ? g.drawImage(playerLoadingImgList.get(i), 0, (i+1) * 30, null) 
+						: g.drawImage(playerLoadingImgList.get(i), 0, 290, null);
 			}
+			playerLoading();
+		} else if (isLoading) {
+			g.drawImage(loadingImgList.get(index), 710, 475, null);
 			loading();
-		} else if (isAtHome) {
+		} else if (isAtHome1) {
 			if (isPlayerActivated) {
 				g.drawImage(departed100, 0, 290, null);
 			}
+		} else if (isAtHome2) {
+
 		}
 		paintComponents(g);
 		this.repaint();
