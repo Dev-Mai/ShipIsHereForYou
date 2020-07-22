@@ -11,6 +11,7 @@ import javax.swing.JButton;
 public class Buttons {
 
 	private int index = 0;
+	private int currView = 0;
 
 	private ImageIcon startButtonEntered = new ImageIcon(Main.class.getResource("../imgs/start_white.png"));
 	private ImageIcon startButtonDefault = new ImageIcon(Main.class.getResource("../imgs/start_grey.png"));
@@ -26,13 +27,17 @@ public class Buttons {
 	private JButton startButton = new JButton(startButtonDefault);
 	private JButton openButton = new JButton(openButtonDefault);
 	private JButton quitButton = new JButton(quitButtonDefault);
-	
+
 	private ImageIcon goLeftButtonEntered = new ImageIcon(Main.class.getResource("../imgs/goLeftButtonEntered.png"));
 	private ImageIcon goLeftButtonDefault = new ImageIcon(Main.class.getResource("../imgs/goLeftButtonDefault.png"));
 	private ImageIcon goRightButtonEntered = new ImageIcon(Main.class.getResource("../imgs/goRightButtonEntered.png"));
 	private ImageIcon goRightButtonDefault = new ImageIcon(Main.class.getResource("../imgs/goRightButtonDefault.png"));
 	private JButton goLeftButton = new JButton(goLeftButtonDefault);
 	private JButton goRightButton = new JButton(goRightButtonDefault);
+
+//	private ImageIcon openGetMemoryWindowButtonDefault = new ImageIcon(Main.class.getResource("../imgs/home/gacha/openGachaWindowDefault.png"));
+//	private ImageIcon openGetMemoryWindowButtonEntered = new ImageIcon(Main.class.getResource("../imgs/home/gacha/openGachaWindowEntered.png"));
+//	private JButton openGetMemoryWindowButton = new JButton(openGetMemoryWindowButtonDefault);
 
 	public Buttons() {
 		exitButtonSetting();
@@ -42,6 +47,7 @@ public class Buttons {
 		backgroundButtonSetting();
 		goLeftButtonSetting();
 		goRightButtonSetting();
+//		openGetMemoryWindowButtonSetting();
 	}
 
 	private void exitButtonSetting() {
@@ -88,7 +94,6 @@ public class Buttons {
 				quitButton.setVisible(false);
 				background = new ImageIcon(Main.class.getResource("../imgs/prolog1background.png")).getImage();
 				Home.isPrologue = true;				
-//				Home.prologue();
 			}
 		});
 		startButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -147,7 +152,7 @@ public class Buttons {
 	public JButton getQuitButton() {
 		return quitButton;
 	}
-	
+
 	private void goLeftButtonSetting() {
 		goLeftButton.setBounds(0, 0, 70, 1080);
 		goLeftButton.setBorderPainted(false);
@@ -155,24 +160,35 @@ public class Buttons {
 		goLeftButton.setFocusPainted(false);
 		goLeftButton.addMouseListener(new MouseAdapter() {
 			public void mouseEntered(MouseEvent e) {
-				goLeftButton.setIcon(goLeftButtonEntered);
-				goLeftButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+				if (!Home.isGachaWindowOpened) {
+					goLeftButton.setIcon(goLeftButtonEntered);
+					goLeftButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+				} else {
+					goLeftButton.setIcon(goLeftButtonDefault);
+					goLeftButton.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+				}
 			}
 			public void mouseExited(MouseEvent e) {
 				goLeftButton.setIcon(goLeftButtonDefault);
 				goLeftButton.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 			}
 			public void mousePressed(MouseEvent e) {
-
+				if (!Home.isGachaWindowOpened) {
+					if (currView > 0) {
+						currView--;
+					} else {
+						currView = Home.getList().homepageList.size()-1;
+					}
+				}
 			}
 		});
 		goLeftButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
 	}
-	
+
 	public JButton getGoLeftButton() {
 		return goLeftButton;
 	}
-	
+
 	private void goRightButtonSetting() {
 		goRightButton.setBounds(1850, 0, 70, 1080);
 		goRightButton.setBorderPainted(false);
@@ -180,20 +196,31 @@ public class Buttons {
 		goRightButton.setFocusPainted(false);
 		goRightButton.addMouseListener(new MouseAdapter() {
 			public void mouseEntered(MouseEvent e) {
-				goRightButton.setIcon(goRightButtonEntered);
-				goRightButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+				if (!Home.isGachaWindowOpened) {
+					goRightButton.setIcon(goRightButtonEntered);
+					goRightButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+				} else {
+					goRightButton.setIcon(goRightButtonDefault);
+					goRightButton.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+				}
 			}
 			public void mouseExited(MouseEvent e) {
 				goRightButton.setIcon(goRightButtonDefault);
 				goRightButton.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 			}
 			public void mousePressed(MouseEvent e) {
-
+				if (!Home.isGachaWindowOpened) {
+					if (currView < Home.getList().homepageList.size()-1) {
+						currView++;
+					} else {
+						currView = 0;
+					}
+				}
 			}
 		});
 		goRightButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
 	}
-	
+
 	public JButton getGoRightButton() {
 		return goRightButton;
 	}
@@ -224,13 +251,11 @@ public class Buttons {
 		});
 
 	}
-	
-	
 
 	public JButton getBackgroundButton() {
 		return backgroundButton;
 	}
-	
+
 	public void setBackgroundButtonVisible(boolean trueOrFalse) {
 		backgroundButton.setVisible(trueOrFalse);
 	}
@@ -245,5 +270,9 @@ public class Buttons {
 
 	public void setIndex(int n) {
 		index = n;
+	}
+
+	public int getCurrView() {
+		return currView;
 	}
 }
