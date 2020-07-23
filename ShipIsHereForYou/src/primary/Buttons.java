@@ -1,14 +1,17 @@
 package primary;
 
 import java.awt.Cursor;
+import java.awt.Font;
 import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
-public class Buttons {
+public class Buttons implements ActionListener {
 
 	private int index = 0;
 	private int currView = 0;
@@ -35,9 +38,8 @@ public class Buttons {
 	private JButton goLeftButton = new JButton(goLeftButtonDefault);
 	private JButton goRightButton = new JButton(goRightButtonDefault);
 
-//	private ImageIcon openGetMemoryWindowButtonDefault = new ImageIcon(Main.class.getResource("../imgs/home/gacha/openGachaWindowDefault.png"));
-//	private ImageIcon openGetMemoryWindowButtonEntered = new ImageIcon(Main.class.getResource("../imgs/home/gacha/openGachaWindowEntered.png"));
-//	private JButton openGetMemoryWindowButton = new JButton(openGetMemoryWindowButtonDefault);
+	private ImageIcon currChipButtonImage = new ImageIcon(Main.class.getResource("../imgs/chip.png"));
+	private JButton currChipButton = new JButton("NULL", currChipButtonImage);
 
 	public Buttons() {
 		exitButtonSetting();
@@ -47,7 +49,7 @@ public class Buttons {
 		backgroundButtonSetting();
 		goLeftButtonSetting();
 		goRightButtonSetting();
-//		openGetMemoryWindowButtonSetting();
+		showCurrChipButtonSetting();
 	}
 
 	private void exitButtonSetting() {
@@ -93,7 +95,7 @@ public class Buttons {
 				openButton.setVisible(false);
 				quitButton.setVisible(false);
 				background = new ImageIcon(Main.class.getResource("../imgs/prolog1background.png")).getImage();
-				Home.isPrologue = true;				
+				Home.isPrologue = true;	
 			}
 		});
 		startButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -225,6 +227,22 @@ public class Buttons {
 		return goRightButton;
 	}
 
+	private void showCurrChipButtonSetting() {
+		currChipButton.setBounds(1000, 50, 300, 100);
+		currChipButton.setBorderPainted(false);
+		currChipButton.setContentAreaFilled(false);
+		currChipButton.setFocusPainted(false);		
+//		currChipButton.setHorizontalAlignment(SwingConstants.RIGHT);
+		currChipButton.setHorizontalTextPosition(JButton.CENTER);
+		currChipButton.setVerticalTextPosition(JButton.CENTER);
+		currChipButton.setFont(new Font("KoPubµ¸¿òÃ¼ Light", Font.BOLD, 20));
+		//		currChipButton
+	}
+
+	public JButton getCurrChipButton() {
+		return currChipButton;
+	}
+
 	private void backgroundButtonSetting() {
 		backgroundButton.setBounds(0, 0, 1920, 1080);
 		backgroundButton.setBorderPainted(false);
@@ -235,22 +253,25 @@ public class Buttons {
 				backgroundButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
 			}
 			public void mousePressed(MouseEvent e) {
-				if (Home.isPrologue) {
-					if (index < Home.getList().prologueList.size()-1)
-						index++;
-					else {
-						index = 0;
-						Home.isPlayerLoading = true;
-						Home.isPrologue = false;
-					}
-				} else if(Home.isAtHome1) {
-					Home.isAtHome1 = false;
-					Home.isLoading = true;
-				}
+//				if (Home.isPrologue) {
+//					if (index < Home.getList().prologueList.size()-1)
+//						index++;
+//					else {
+//						index = 0;
+//						Home.isPlayerLoading = true;
+//						Home.isPrologue = false;
+//					}
+//				} else if(Home.isAtHome1) {
+//					Home.isAtHome1 = false;
+//					Home.isLoading = true;
+//				}
 			}
 		});
+		backgroundButton.addActionListener(this);
 
 	}
+
+
 
 	public JButton getBackgroundButton() {
 		return backgroundButton;
@@ -274,5 +295,21 @@ public class Buttons {
 
 	public int getCurrView() {
 		return currView;
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent arg0) {
+		if (Home.isPrologue) {
+			if (index < Home.getList().prologueList.size()-1)
+				index++;
+			else {
+				index = 0;
+				Home.isPlayerLoading = true;
+				Home.isPrologue = false;
+			}
+		} else if(Home.isAtHome1) {
+			Home.isAtHome1 = false;
+			Home.isLoading = true;
+		}		
 	}
 }

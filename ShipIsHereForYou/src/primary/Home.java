@@ -27,6 +27,7 @@ public class Home extends JFrame{
 	protected static boolean isLoading = false;
 	protected static boolean isAtHome1 = false;
 	protected static boolean isGachaWindowOpened = false;
+	private boolean isFirstVisit = true;
 	private boolean isPlayerActivated = false;
 	private boolean isAtHome2 = false;
 
@@ -40,6 +41,10 @@ public class Home extends JFrame{
 	private static ImageIcon openGetMemoryWindowButtonDefault = new ImageIcon(Main.class.getResource("../imgs/home/gacha/openGachaWindowDefault.png"));
 	private ImageIcon openGetMemoryWindowButtonEntered = new ImageIcon(Main.class.getResource("../imgs/home/gacha/openGachaWindowEntered.png"));
 	protected static JButton openGetMemoryWindowButton = new JButton(openGetMemoryWindowButtonDefault);
+	
+	private MyListener lisetener = new MyListener();
+	
+	protected static int currChips = 10000;
 	
 	public Home() {
 		setUndecorated(true);
@@ -69,6 +74,7 @@ public class Home extends JFrame{
 
 	public void prologue() {
 		//		music.musicPlay("src/musics/prologueBGM.wav");
+		if (isFirstVisit)
 		add(buttons.getBackgroundButton());
 	}
 
@@ -112,14 +118,7 @@ public class Home extends JFrame{
 		add(openGetMemoryWindowButton);
 		// 기타 다른 버튼들 추가
 		
-//		if (buttons.getCurrView() == 0) {
-//			openGetMemoryWindowButton.setVisible(true);
-//		} else if (buttons.getCurrView() == 1) {
-//			openGetMemoryWindowButton.setVisible(false);
-//		} else if (buttons.getCurrView() == 2) {
-//			openGetMemoryWindowButton.setVisible(false);
-//		}
-
+		add(buttons.getCurrChipButton());
 		add(buttons.getGoLeftButton());
 		add(buttons.getGoRightButton());
 
@@ -130,31 +129,30 @@ public class Home extends JFrame{
 		openGetMemoryWindowButton.setBorderPainted(false);
 		openGetMemoryWindowButton.setContentAreaFilled(false);
 		openGetMemoryWindowButton.setFocusPainted(false);
-		openGetMemoryWindowButton.addMouseListener(new MouseAdapter() {
-			public void mouseEntered(MouseEvent e) {
-				if (!Home.isGachaWindowOpened) {
-					openGetMemoryWindowButton.setIcon(openGetMemoryWindowButtonEntered);
-					openGetMemoryWindowButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
-				} else {
-					openGetMemoryWindowButton.setIcon(openGetMemoryWindowButtonDefault);
-					openGetMemoryWindowButton.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-				}
-			}
-			public void mouseExited(MouseEvent e) {
-				openGetMemoryWindowButton.setIcon(openGetMemoryWindowButtonDefault);
-				openGetMemoryWindowButton.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-			}
-			public void mousePressed(MouseEvent e) {
-				if (!Home.isGachaWindowOpened) {
-					setVisible(true);
-					Home.isGachaWindowOpened = true;
-					box = new MemoryPickUpBox();
-					box.setBounds(160, 90, 1600, 900);
-					add(box);
-//					closeGetmemoryWindowButton.setVisible(true);
-				}
-			}
-		});
+		openGetMemoryWindowButton.addMouseListener(lisetener);
+//		openGetMemoryWindowButton.addMouseListener(new MouseAdapter() {
+//			public void mouseEntered(MouseEvent e) {
+//				if (!Home.isGachaWindowOpened) {
+//					openGetMemoryWindowButton.setIcon(openGetMemoryWindowButtonEntered);
+//					openGetMemoryWindowButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+//				} else {
+//					openGetMemoryWindowButton.setIcon(openGetMemoryWindowButtonDefault);
+//					openGetMemoryWindowButton.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+//				}
+//			}
+//			public void mouseExited(MouseEvent e) {
+//				openGetMemoryWindowButton.setIcon(openGetMemoryWindowButtonDefault);
+//				openGetMemoryWindowButton.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+//			}
+//			public void mousePressed(MouseEvent e) {
+//				if (!Home.isGachaWindowOpened) {
+//					Home.isGachaWindowOpened = true;
+//					box = new MemoryPickUpBox();
+//					box.setBounds(160, 90, 1600, 900);
+//					add(box);
+//				}
+//			}
+//		});
 		openGetMemoryWindowButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
 	}
 
@@ -211,19 +209,53 @@ public class Home extends JFrame{
 			loading();
 			g.drawImage(lists.loadingImgList.get(homeIndex), 710, 475, null);
 		} else if (isAtHome2) {
-			atHome2();
+//			atHome2();
+			
 			g.drawImage(lists.homepageList.get(buttons.getCurrView()), 0, 0, null);
 			if (buttons.getCurrView() == 0) {
-				openGetMemoryWindowButton.setVisible(true);
+				if (!Home.isGachaWindowOpened) {
+					openGetMemoryWindowButton.setVisible(true);
+				} else {
+					openGetMemoryWindowButton.setVisible(false);
+				}
+				
 			} else if (buttons.getCurrView() == 1) {
 				openGetMemoryWindowButton.setVisible(false);
 			} else if (buttons.getCurrView() == 2) {
 				openGetMemoryWindowButton.setVisible(false);
 			}
+			
+			buttons.getCurrChipButton().setText(Integer.toString(currChips));
+			
 
 		}
 		paintComponents(g);
 		this.repaint();
+	}
+	
+	class MyListener extends MouseAdapter {
+		public void mouseEntered(MouseEvent e) {
+			if (!Home.isGachaWindowOpened) {
+				openGetMemoryWindowButton.setIcon(openGetMemoryWindowButtonEntered);
+				openGetMemoryWindowButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+			} else {
+				openGetMemoryWindowButton.setIcon(openGetMemoryWindowButtonDefault);
+				openGetMemoryWindowButton.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+			}
+		}
+		public void mouseExited(MouseEvent e) {
+			openGetMemoryWindowButton.setIcon(openGetMemoryWindowButtonDefault);
+			openGetMemoryWindowButton.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+		}
+		public void mousePressed(MouseEvent e) {
+			if (!Home.isGachaWindowOpened) {
+				Home.isGachaWindowOpened = true;
+				box = new MemoryPickUpBox();
+				box.setBounds(160, 90, 1600, 900);
+				add(box);
+				openGetMemoryWindowButton.setVisible(false);
+			}
+		}
 	}
 
 }

@@ -14,7 +14,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 @SuppressWarnings("serial")
-public class MemoryPickUpBox extends JPanel{
+public class MemoryPickUpBox extends JPanel {
+
+	//	private int tmpInt = 0;
 
 	private ImageIcon closeGetmemoryWindowButtonDefault = new ImageIcon(Main.class.getResource("../imgs/home/gacha/closeButton_x.png"));
 	private ImageIcon closeGetmemoryWindowButtonEntered = new ImageIcon(Main.class.getResource("../imgs/home/gacha/closeButton_x_Entered.png"));
@@ -55,7 +57,7 @@ public class MemoryPickUpBox extends JPanel{
 	private void memoryListSetUp() {
 		frameType.add(new ImageIcon(Main.class.getResource("../imgs/home/gacha/data/frame_00_white.png")));
 		frameType.add(new ImageIcon(Main.class.getResource("../imgs/home/gacha/data/frame_01_red.png")));
-		frameType.add(new ImageIcon(Main.class.getResource("../imgs/home/gacha/data/frame_02_violet.png")));
+		frameType.add(new ImageIcon(Main.class.getResource("../imgs/home/gacha/data/frame_02_violet_1.png")));
 		frameType.add(new ImageIcon(Main.class.getResource("../imgs/home/gacha/data/frame_03_gold_1.png")));
 		frameType.add(new ImageIcon(Main.class.getResource("../imgs/home/gacha/data/frame_04_mint_1.png")));
 		memory.add(new ImageIcon(Main.class.getResource("../imgs/home/gacha/data/00.png")));
@@ -67,7 +69,7 @@ public class MemoryPickUpBox extends JPanel{
 		memory.add(new ImageIcon(Main.class.getResource("../imgs/home/gacha/data/06_2.png")));
 		memory.add(new ImageIcon(Main.class.getResource("../imgs/home/gacha/data/07.png")));
 		memory.add(new ImageIcon(Main.class.getResource("../imgs/home/gacha/data/08_2.png")));
-		memory.add(new ImageIcon(Main.class.getResource("../imgs/home/gacha/data/09.png")));
+		memory.add(new ImageIcon(Main.class.getResource("../imgs/home/gacha/data/09_2.png")));
 		memory.add(new ImageIcon(Main.class.getResource("../imgs/home/gacha/data/10.png")));
 		memory.add(new ImageIcon(Main.class.getResource("../imgs/home/gacha/data/11.png")));
 		memory.add(new ImageIcon(Main.class.getResource("../imgs/home/gacha/data/12.png")));
@@ -104,6 +106,7 @@ public class MemoryPickUpBox extends JPanel{
 		closeGetmemoryWindowButton.setBorderPainted(false);
 		closeGetmemoryWindowButton.setContentAreaFilled(false);
 		closeGetmemoryWindowButton.setFocusPainted(false);
+		//		closeGetmemoryWindowButton.addActionListener(this);
 		closeGetmemoryWindowButton.addMouseListener(new MouseAdapter() {
 			public void mouseEntered(MouseEvent e) {
 				closeGetmemoryWindowButton.setIcon(closeGetmemoryWindowButtonEntered);
@@ -150,7 +153,12 @@ public class MemoryPickUpBox extends JPanel{
 				closeGetmemoryWindowButton.setVisible(false);
 				Home.openGetMemoryWindowButton.setVisible(false);
 				recoverButton.setVisible(false);
-				proceedRecovering();
+				if (Home.currChips >= 1000) {
+					Home.currChips -= 1000;
+					proceedRecovering();
+				} else {
+					// show unRecoverable message
+				}
 			}
 		});
 	}
@@ -174,7 +182,6 @@ public class MemoryPickUpBox extends JPanel{
 				r = (int)(Math.random() * 10000 % memoryField.size());
 				p.setIcon(memoryField.get(r));
 				p.setOpaque(false);
-//				add(p);
 
 				frame = new JLabel();
 				if (r > 119 && r <= 121) {
@@ -190,6 +197,7 @@ public class MemoryPickUpBox extends JPanel{
 				}
 				frame.setBounds(150 + 275 * j, 100 + 400 * i, 200, 300);
 				frame.setOpaque(false);
+
 				add(frame);
 				add(p);
 			}
@@ -203,5 +211,16 @@ public class MemoryPickUpBox extends JPanel{
 		super.paintComponent(g);
 		g.drawImage(windowBackground, 0, 0, null);
 	}
+
+	//	@Override
+	//	public void actionPerformed(ActionEvent e) {
+	//		System.out.println("EnteredActionListener: " + tmpInt++);
+	//		
+	//		
+	//	}
+
+	//	class myListener extends MouseAdapter {
+	//		
+	//	}
 
 }
