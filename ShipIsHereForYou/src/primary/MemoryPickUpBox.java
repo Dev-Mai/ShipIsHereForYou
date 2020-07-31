@@ -49,6 +49,7 @@ public class MemoryPickUpBox extends JPanel {
 
 		add(closeGetmemoryWindowButton);
 		add(recoverButton);
+		
 
 		setVisible(true);
 
@@ -120,11 +121,14 @@ public class MemoryPickUpBox extends JPanel {
 				if (Home.isGachaWindowOpened) {
 					Home.isGachaWindowOpened = false;
 					closeGetmemoryWindowButton.setVisible(false);
-					setVisible(false);
+//					setVisible(false);
+//					remove(this);
+//					remove();
 					if (!Home.openGetMemoryWindowButton.isVisible()) {
 						Home.openGetMemoryWindowButton.setVisible(true);
 					}
 					windowBackground = windowBackgroundDefault;
+					Home.closeBox();
 				}
 			}
 		});

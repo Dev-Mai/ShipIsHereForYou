@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import javax.swing.ImageIcon;
 
 public class Lists {
-	
+
 	protected ArrayList<Image> prologueList = new ArrayList<>();
 	protected ArrayList<Image> playerLoadingImgList = new ArrayList<>();
 	protected ArrayList<Image> loadingImgList = new ArrayList<>();
@@ -19,7 +19,7 @@ public class Lists {
 		addHomepageList();
 	}
 
-	
+
 
 	private void addPrologueList() {
 		prologueList.add(new ImageIcon(Main.class.getResource("../imgs/prolog1.png")).getImage());
@@ -29,7 +29,7 @@ public class Lists {
 		prologueList.add(new ImageIcon(Main.class.getResource("../imgs/prolog5.png")).getImage());
 		prologueList.add(new ImageIcon(Main.class.getResource("../imgs/prolog6.png")).getImage());		
 	}
-	
+
 	private void addPlayerLoadingImgList() {
 		playerLoadingImgList.add(new ImageIcon(Main.class.getResource("../imgs/0.png")).getImage());		
 		playerLoadingImgList.add(new ImageIcon(Main.class.getResource("../imgs/0.png")).getImage());		
@@ -50,7 +50,7 @@ public class Lists {
 		playerLoadingImgList.add(new ImageIcon(Main.class.getResource("../imgs/6.png")).getImage());
 		playerLoadingImgList.add(new ImageIcon(Main.class.getResource("../imgs/7.png")).getImage());
 	}
-	
+
 	private void addLoadingImgList() {
 		loadingImgList.add(new ImageIcon(Main.class.getResource("../imgs/loadingImgs/loading00.png")).getImage());		
 		loadingImgList.add(new ImageIcon(Main.class.getResource("../imgs/loadingImgs/loading01.png")).getImage());		
@@ -66,10 +66,11 @@ public class Lists {
 		loadingImgList.add(new ImageIcon(Main.class.getResource("../imgs/loadingImgs/loading11.png")).getImage());
 		loadingImgList.add(new ImageIcon(Main.class.getResource("../imgs/loadingImgs/loading12.png")).getImage());		
 	}
-	
+
 	private void addHomepageList() {
 		homepageList.add(new ImageIcon(Main.class.getResource("../imgs/cockpit/view0.png")).getImage());
 		homepageList.add(new ImageIcon(Main.class.getResource("../imgs/cockpit/view1.png")).getImage());
+		homepageList.add(new ImageIcon(Main.class.getResource("../imgs/cockpit/view0.png")).getImage());
 		homepageList.add(new ImageIcon(Main.class.getResource("../imgs/cockpit/view2.png")).getImage());
 	}
 }
