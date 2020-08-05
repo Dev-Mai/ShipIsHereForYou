@@ -121,6 +121,7 @@ public class Buttons implements ActionListener {
 			}
 			public void mousePressed(MouseEvent e) {
 				// open files
+				// get file and add the file data to Last4Clone0(player)
 			}
 		});
 		openButton.setCursor(new Cursor(Cursor.HAND_CURSOR));		

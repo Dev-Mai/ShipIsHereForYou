@@ -33,7 +33,7 @@ public class MemoryPickUpBox extends JPanel {
 	private JButton recoverButton = new JButton(recoverButtonDefault);
 
 	private ArrayList<ImageIcon> memory = new ArrayList<>();
-	private ArrayList<ImageIcon> memoryField = new ArrayList<>();
+	private ArrayList<Integer> memoryField = new ArrayList<>();
 	private ArrayList<ImageIcon> frameType = new ArrayList<>();
 	private JLabel frame = new JLabel();
 
@@ -95,7 +95,7 @@ public class MemoryPickUpBox extends JPanel {
 				repeat = 20;
 			}
 			for (int j = 0; j < repeat; j++) { 
-				memoryField.add(memory.get(i));
+				memoryField.add(i);
 			}
 
 		}
@@ -157,8 +157,8 @@ public class MemoryPickUpBox extends JPanel {
 				closeGetmemoryWindowButton.setVisible(false);
 				Home.openGetMemoryWindowButton.setVisible(false);
 				recoverButton.setVisible(false);
-				if (Home.currChips >= 1000) {
-					Home.currChips -= 1000;
+				if (Home.player.getCurrChips() >= 1000) {
+					Home.player.setCurrChips(Home.player.getCurrChips() - 1000);
 					proceedRecovering();
 				} else {
 					// show unRecoverable message
@@ -178,23 +178,26 @@ public class MemoryPickUpBox extends JPanel {
 		frame.setOpaque(false);
 		JLabel p;
 		int r;
+		int picked;
 		for (int i = 0; i < 2; i++) {
 			for (int j = 0; j < 5; j++) {
 				p = new JLabel();
 				p.setBounds(150 + 275 * j, 100 + 400 * i, 200, 300);
 				p.setBackground(new Color(0, 0, 0, 0));
 				r = (int)(Math.random() * 10000 % memoryField.size());
-				p.setIcon(memoryField.get(r));
+				picked = memoryField.get(r);
+				Home.player.addToMemoryKeep(picked);
+				p.setIcon(memory.get(picked));
 				p.setOpaque(false);
 
 				frame = new JLabel();
-				if (r > 119 && r <= 121) {
+				if (picked == 6) {
 					frame.setIcon(frameType.get(4)); 
-				} else if (r > 141 && r <= 147) {
+				} else if (picked == 8) {
 					frame.setIcon(frameType.get(3));
-				} else if (r > 147 && r <= 155) {
+				} else if (picked == 9) {
 					frame.setIcon(frameType.get(2));
-				} else if (r > 155 && r <= 165) {
+				} else if (picked == 10) {
 					frame.setIcon(frameType.get(1));
 				} else {
 					frame.setIcon(frameType.get(0));

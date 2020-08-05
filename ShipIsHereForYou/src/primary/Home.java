@@ -44,8 +44,9 @@ public class Home extends JFrame{
 	protected static JButton openGetMemoryWindowButton = new JButton(openGetMemoryWindowButtonDefault);
 
 	private MyListener listener = new MyListener();
+	
+	protected static Last4Clone0 player;
 
-	protected static int currChips = 10000;
 
 	public Home() {
 		setUndecorated(true);
@@ -75,8 +76,12 @@ public class Home extends JFrame{
 
 	public void prologue() {
 		//		music.musicPlay("src/musics/prologueBGM.wav");
-		if (isFirstVisit)
+		if (isFirstVisit) {
 			add(buttons.getBackgroundButton());
+			player = new Last4Clone0();
+			// add name input panel
+			player.setName("Admin");
+		}
 	}
 
 	public void playerLoading() {
@@ -228,7 +233,7 @@ public class Home extends JFrame{
 				
 			}
 
-			buttons.getCurrChipButton().setText(Integer.toString(currChips));
+			buttons.getCurrChipButton().setText(Integer.toString(player.getCurrChips()));
 
 
 		}
