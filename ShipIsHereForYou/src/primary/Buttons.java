@@ -38,8 +38,17 @@ public class Buttons implements ActionListener {
 	private JButton goLeftButton = new JButton(goLeftButtonDefault);
 	private JButton goRightButton = new JButton(goRightButtonDefault);
 
+	private ImageIcon openGetMemoryWindowButtonDefault = new ImageIcon(Main.class.getResource("../imgs/home/gacha/openGachaWindowDefault.png"));
+	private ImageIcon openGetMemoryWindowButtonEntered = new ImageIcon(Main.class.getResource("../imgs/home/gacha/openGachaWindowEntered.png"));
+	private JButton openGetMemoryWindowButton = new JButton(openGetMemoryWindowButtonDefault);
+
 	private ImageIcon currChipButtonImage = new ImageIcon(Main.class.getResource("../imgs/chip.png"));
 	private JButton currChipButton = new JButton("NULL", currChipButtonImage);
+
+	private ImageIcon showCharacterButtonImage = new ImageIcon(Main.class.getResource("../imgs/home/characters/open.png"));
+	private JButton showCharacterButton = new JButton(showCharacterButtonImage);
+
+	private MyListener listener = new MyListener();
 
 	public Buttons() {
 		exitButtonSetting();
@@ -49,7 +58,9 @@ public class Buttons implements ActionListener {
 		backgroundButtonSetting();
 		goLeftButtonSetting();
 		goRightButtonSetting();
+		openGetMemoryWindowButtonSetting();
 		showCurrChipButtonSetting();
+		showCharacterButtonSetting();
 	}
 
 	private void exitButtonSetting() {
@@ -163,7 +174,7 @@ public class Buttons implements ActionListener {
 		goLeftButton.setFocusPainted(false);
 		goLeftButton.addMouseListener(new MouseAdapter() {
 			public void mouseEntered(MouseEvent e) {
-				if (!Home.isGachaWindowOpened) {
+				if (!Home.isGachaWindowOpened && !Home.isCharacterBoxOpened) {
 					goLeftButton.setIcon(goLeftButtonEntered);
 					goLeftButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
 				} else {
@@ -176,7 +187,7 @@ public class Buttons implements ActionListener {
 				goLeftButton.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 			}
 			public void mousePressed(MouseEvent e) {
-				if (!Home.isGachaWindowOpened) {
+				if (!Home.isGachaWindowOpened && !Home.isCharacterBoxOpened) {
 					if (currView > 0) {
 						currView--;
 					} else {
@@ -199,7 +210,7 @@ public class Buttons implements ActionListener {
 		goRightButton.setFocusPainted(false);
 		goRightButton.addMouseListener(new MouseAdapter() {
 			public void mouseEntered(MouseEvent e) {
-				if (!Home.isGachaWindowOpened) {
+				if (!Home.isGachaWindowOpened && !Home.isCharacterBoxOpened) {
 					goRightButton.setIcon(goRightButtonEntered);
 					goRightButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
 				} else {
@@ -212,7 +223,7 @@ public class Buttons implements ActionListener {
 				goRightButton.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 			}
 			public void mousePressed(MouseEvent e) {
-				if (!Home.isGachaWindowOpened) {
+				if (!Home.isGachaWindowOpened && !Home.isCharacterBoxOpened) {
 					if (currView < Home.getList().homepageList.size()-1) {
 						currView++;
 					} else {
@@ -228,21 +239,45 @@ public class Buttons implements ActionListener {
 		return goRightButton;
 	}
 
+	private void openGetMemoryWindowButtonSetting() {
+		openGetMemoryWindowButton.setBounds(1200, 300, 400, 100);
+		openGetMemoryWindowButton.setBorderPainted(false);
+		openGetMemoryWindowButton.setContentAreaFilled(false);
+		openGetMemoryWindowButton.setFocusPainted(false);
+		openGetMemoryWindowButton.addMouseListener(listener);
+		openGetMemoryWindowButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+	}
+
+	public JButton getOpenGetMemoryWindowButton() {
+		return openGetMemoryWindowButton;
+	}
+
 	private void showCurrChipButtonSetting() {
 		currChipButton.setBounds(1000, 50, 300, 100);
 		currChipButton.setBorderPainted(false);
 		currChipButton.setContentAreaFilled(false);
 		currChipButton.setFocusPainted(false);		
-//		currChipButton.setHorizontalAlignment(SwingConstants.RIGHT);
 		currChipButton.setHorizontalTextPosition(JButton.CENTER);
 		currChipButton.setVerticalTextPosition(JButton.CENTER);
 		currChipButton.setFont(new Font("KoPubµ¸¿òÃ¼ Light", Font.BOLD, 20));
-		//		currChipButton
 	}
 
 	public JButton getCurrChipButton() {
 		return currChipButton;
 	}
+
+	private void showCharacterButtonSetting() {
+		showCharacterButton.setBounds(500, 500, 400, 100);
+		showCharacterButton.setBorderPainted(false);
+		showCharacterButton.setContentAreaFilled(false);
+		showCharacterButton.setFocusPainted(false);
+		showCharacterButton.addMouseListener(listener);
+	}
+
+	public JButton getShowCharacterButton() {
+		return showCharacterButton;
+	}
+
 
 	private void backgroundButtonSetting() {
 		backgroundButton.setBounds(0, 0, 1920, 1080);
@@ -254,25 +289,12 @@ public class Buttons implements ActionListener {
 				backgroundButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
 			}
 			public void mousePressed(MouseEvent e) {
-//				if (Home.isPrologue) {
-//					if (index < Home.getList().prologueList.size()-1)
-//						index++;
-//					else {
-//						index = 0;
-//						Home.isPlayerLoading = true;
-//						Home.isPrologue = false;
-//					}
-//				} else if(Home.isAtHome1) {
-//					Home.isAtHome1 = false;
-//					Home.isLoading = true;
-//				}
+				
 			}
 		});
 		backgroundButton.addActionListener(this);
 
 	}
-
-
 
 	public JButton getBackgroundButton() {
 		return backgroundButton;
@@ -313,4 +335,52 @@ public class Buttons implements ActionListener {
 			Home.isLoading = true;
 		}		
 	}
+
+	class MyListener extends MouseAdapter {
+		public void mouseEntered(MouseEvent e) {
+			if (getCurrView() == 0) {
+				if (!Home.isGachaWindowOpened) {
+					openGetMemoryWindowButton.setIcon(openGetMemoryWindowButtonEntered);
+					openGetMemoryWindowButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+				} else {
+					openGetMemoryWindowButton.setIcon(openGetMemoryWindowButtonDefault);
+					openGetMemoryWindowButton.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+				}
+			} else if (getCurrView() == 3) {
+				if (!Home.isCharacterBoxOpened) {
+					showCharacterButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+				} else {
+					showCharacterButton.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+				}
+			}
+		}
+		public void mouseExited(MouseEvent e) {
+			if (getCurrView() == 0) {
+				openGetMemoryWindowButton.setIcon(openGetMemoryWindowButtonDefault);
+				openGetMemoryWindowButton.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+			} else if (getCurrView() == 3) {
+				showCharacterButton.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+			}
+		}
+		public void mousePressed(MouseEvent e) {
+			if (getCurrView() == 0) {
+				if (e.getSource().equals(openGetMemoryWindowButton)) {
+					if (!Home.isGachaWindowOpened) {
+						Home.isGachaWindowOpened = true;
+						Home.box = new MemoryPickUpBox();
+						Home.box.setBounds(160, 90, 1600, 900);
+						Home.shouldAddMemoryBox = true;
+						openGetMemoryWindowButton.setVisible(false);
+					}
+				}
+			} else if (getCurrView() == 3) {
+				if (e.getSource().equals(showCharacterButton)) {
+					if (!Home.isCharacterBoxOpened) {
+						Home.isCharacterBoxOpened = true;
+					}
+				}
+			}
+		}
+	}
+
 }
