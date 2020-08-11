@@ -1,15 +1,11 @@
 package primary;
 
 import java.awt.Color;
-import java.awt.Cursor;
 import java.awt.Graphics;
 import java.awt.Image;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.util.concurrent.TimeUnit;
 
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
@@ -27,24 +23,27 @@ public class Home extends JFrame{
 	protected static boolean isLoading = false;
 	protected static boolean isAtHome1 = false;
 	protected static boolean isGachaWindowOpened = false;
+	protected static boolean isCharacterBoxOpened = false;
+	protected static boolean shouldAddMemoryBox = true;
 	private boolean isFirstVisit = true;
 	private boolean isPlayerActivated = false;
 	private boolean isAtHome2 = false;
 
 	private Image departed100 = new ImageIcon(Main.class.getResource("../imgs/100departed.png")).getImage();
 
-	private static Buttons buttons = new Buttons();
+	static Buttons buttons = new Buttons();
 	private static Lists lists = new Lists();
-	private static MemoryPickUpBox box = new MemoryPickUpBox();
+	protected static MemoryPickUpBox box = new MemoryPickUpBox();
 	private static VoyageMap map = new VoyageMap(); 
+	private static Character characterBox = new Character();
 	// Music music = new Music();
 
-	private static ImageIcon openGetMemoryWindowButtonDefault = new ImageIcon(Main.class.getResource("../imgs/home/gacha/openGachaWindowDefault.png"));
-	private ImageIcon openGetMemoryWindowButtonEntered = new ImageIcon(Main.class.getResource("../imgs/home/gacha/openGachaWindowEntered.png"));
-	protected static JButton openGetMemoryWindowButton = new JButton(openGetMemoryWindowButtonDefault);
+//	private static ImageIcon openGetMemoryWindowButtonDefault = new ImageIcon(Main.class.getResource("../imgs/home/gacha/openGachaWindowDefault.png"));
+//	private ImageIcon openGetMemoryWindowButtonEntered = new ImageIcon(Main.class.getResource("../imgs/home/gacha/openGachaWindowEntered.png"));
+//	protected static JButton openGetMemoryWindowButton = new JButton(openGetMemoryWindowButtonDefault);
 
-	private MyListener listener = new MyListener();
-	
+//	private MyListener listener = new MyListener();
+
 	protected static Last4Clone0 player;
 
 
@@ -120,28 +119,21 @@ public class Home extends JFrame{
 		isAtHome2 = true;
 		buttons.setBackgroundButtonVisible(false);
 
-		openGetMemoryWindowButtonSetting();
-		add(openGetMemoryWindowButton);
+		add(characterBox);
+		add(buttons.getOpenGetMemoryWindowButton());
 
 		mapSetting();
 		add(map);
-		
+
+
 
 		add(buttons.getCurrChipButton());
+		add(buttons.getShowCharacterButton());
 		add(buttons.getGoLeftButton());
 		add(buttons.getGoRightButton());
 
 	}
 
-	private void openGetMemoryWindowButtonSetting() {
-		openGetMemoryWindowButton.setBounds(1200, 300, 400, 100);
-		openGetMemoryWindowButton.setBorderPainted(false);
-		openGetMemoryWindowButton.setContentAreaFilled(false);
-		openGetMemoryWindowButton.setFocusPainted(false);
-		openGetMemoryWindowButton.addMouseListener(listener);
-		openGetMemoryWindowButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
-	}
-	
 	private void mapSetting() {
 		map.setBounds(360, 140, 1200, 800);
 	}
@@ -175,9 +167,16 @@ public class Home extends JFrame{
 	}
 
 	public static void closeBox() {
-		box.setIgnoreRepaint(true);
-		box.setEnabled(false);
-		box.setVisible(false);
+		if (isGachaWindowOpened) {
+			box.setIgnoreRepaint(true);
+			box.setEnabled(false);
+			box.setVisible(false);
+			shouldAddMemoryBox = false;
+		} else if (isCharacterBoxOpened) {
+//			characterBox.setIgnoreRepaint(true);
+//			characterBox.setEnabled(false);
+			characterBox.setVisible(false);
+		}
 	}
 
 	public void paint(Graphics g) {
@@ -205,71 +204,69 @@ public class Home extends JFrame{
 			loading();
 			g.drawImage(lists.loadingImgList.get(homeIndex), 710, 475, null);
 		} else if (isAtHome2) {
-			
+
 			g.drawImage(lists.homepageList.get(buttons.getCurrView()), 0, 0, null);
-			
-			if (buttons.getCurrView() == 0) {
-				
+
+			if (buttons.getCurrView() == 0) { // primary window, memory backup window
+
 				buttons.getCurrChipButton().setVisible(true);
+				buttons.getGoLeftButton().setVisible(true);
+				buttons.getGoRightButton().setVisible(true);
+				buttons.getShowCharacterButton().setVisible(false);
 				if (!Home.isGachaWindowOpened) {
-					openGetMemoryWindowButton.setVisible(true);
+					buttons.getOpenGetMemoryWindowButton().setVisible(true);
 				} else {
-					openGetMemoryWindowButton.setVisible(false);
+					buttons.getOpenGetMemoryWindowButton().setVisible(false);
+					if (shouldAddMemoryBox) {
+						add(box);
+						box.setVisible(true);
+						shouldAddMemoryBox = false;
+					}
 				}
 				map.setVisible(false);
 
-				
-			} else if (buttons.getCurrView() == 1) {
+			} else if (buttons.getCurrView() == 1) { // map window
 
 				buttons.getCurrChipButton().setVisible(false);
-				openGetMemoryWindowButton.setVisible(false);
+				buttons.getGoLeftButton().setVisible(true);
+				buttons.getGoRightButton().setVisible(true);
+				buttons.getShowCharacterButton().setVisible(false);
+				buttons.getOpenGetMemoryWindowButton().setVisible(false);
 				map.setVisible(true);
-				
-			} else if (buttons.getCurrView() == 2) {
-				
-				buttons.getCurrChipButton().setVisible(true);
-				openGetMemoryWindowButton.setVisible(false);
+
+			} else if (buttons.getCurrView() == 2) { // empty 
+				buttons.getCurrChipButton().setVisible(true);	
+				buttons.getGoLeftButton().setVisible(true);
+				buttons.getGoRightButton().setVisible(true);
+				buttons.getShowCharacterButton().setVisible(false);
+				buttons.getOpenGetMemoryWindowButton().setVisible(false);
 				map.setVisible(false);
-				
+
+			} else if (buttons.getCurrView() == 3) { // character window
+				buttons.getCurrChipButton().setVisible(true);
+				buttons.getGoLeftButton().setVisible(true);
+				buttons.getGoRightButton().setVisible(true);
+				buttons.getShowCharacterButton().setVisible(true);
+				buttons.getOpenGetMemoryWindowButton().setVisible(false);
+				map.setVisible(false);
+				if (isCharacterBoxOpened) {
+					buttons.getGoLeftButton().setVisible(false);
+					buttons.getGoRightButton().setVisible(false);
+					characterBox.setVisible(true);
+					characterBox.getCloseCharacterWindowButton().setVisible(true);
+				} else {
+					buttons.getGoLeftButton().setVisible(true);
+					buttons.getGoRightButton().setVisible(true);
+					characterBox.setVisible(false);
+				}
+
 			}
 
 			buttons.getCurrChipButton().setText(Integer.toString(player.getCurrChips()));
 
-
 		}
 		paintComponents(g);
 		this.repaint();
-	}
-
-	class MyListener extends MouseAdapter {
-		public void mouseEntered(MouseEvent e) {
-			if (buttons.getCurrView() == 0) {
-				if (!Home.isGachaWindowOpened) {
-					openGetMemoryWindowButton.setIcon(openGetMemoryWindowButtonEntered);
-					openGetMemoryWindowButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
-				} else {
-					openGetMemoryWindowButton.setIcon(openGetMemoryWindowButtonDefault);
-					openGetMemoryWindowButton.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-				}
-			}
-		}
-		public void mouseExited(MouseEvent e) {
-			if (buttons.getCurrView() == 0) {
-				openGetMemoryWindowButton.setIcon(openGetMemoryWindowButtonDefault);
-				openGetMemoryWindowButton.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-			}
-		}
-		public void mousePressed(MouseEvent e) {
-			if (buttons.getCurrView() == 0) {
-				if (!Home.isGachaWindowOpened) {
-					Home.isGachaWindowOpened = true;
-					box = new MemoryPickUpBox();
-					box.setBounds(160, 90, 1600, 900);
-					add(box);
-					openGetMemoryWindowButton.setVisible(false);
-				}
-			}
-		}
 	}
 
 }
