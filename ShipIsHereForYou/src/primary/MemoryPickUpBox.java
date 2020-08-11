@@ -16,8 +16,6 @@ import javax.swing.JPanel;
 @SuppressWarnings("serial")
 public class MemoryPickUpBox extends JPanel {
 
-	//	private int tmpInt = 0;
-
 	private ImageIcon closeGetmemoryWindowButtonDefault = new ImageIcon(Main.class.getResource("../imgs/home/gacha/closeButton_x.png"));
 	private ImageIcon closeGetmemoryWindowButtonEntered = new ImageIcon(Main.class.getResource("../imgs/home/gacha/closeButton_x_Entered.png"));
 	private JButton closeGetmemoryWindowButton = new JButton(closeGetmemoryWindowButtonDefault);
@@ -32,7 +30,6 @@ public class MemoryPickUpBox extends JPanel {
 	private ImageIcon recoverButtonEntered = new ImageIcon(Main.class.getResource("../imgs/home/gacha/recoverButtonEntered.png"));
 	private JButton recoverButton = new JButton(recoverButtonDefault);
 
-	private ArrayList<ImageIcon> memory = new ArrayList<>();
 	private ArrayList<Integer> memoryField = new ArrayList<>();
 	private ArrayList<ImageIcon> frameType = new ArrayList<>();
 	private JLabel frame = new JLabel();
@@ -42,47 +39,28 @@ public class MemoryPickUpBox extends JPanel {
 		setBackground(new Color(0, 0, 0, 0));
 		setLayout(null);
 
-		memoryListSetUp();
+		frameSetUp();
 
 		closeGetMemoryWindowButtonSetting();
 		recoverButtonSetting();
 
 		add(closeGetmemoryWindowButton);
 		add(recoverButton);
-		
 
-		setVisible(true);
+
+		setVisible(false);
 
 	}
 
-	private void memoryListSetUp() {
+	private void frameSetUp() {
 		frameType.add(new ImageIcon(Main.class.getResource("../imgs/home/gacha/data/frame_00_white.png")));
 		frameType.add(new ImageIcon(Main.class.getResource("../imgs/home/gacha/data/frame_01_red.png")));
 		frameType.add(new ImageIcon(Main.class.getResource("../imgs/home/gacha/data/frame_02_violet_1.png")));
 		frameType.add(new ImageIcon(Main.class.getResource("../imgs/home/gacha/data/frame_03_gold_1.png")));
 		frameType.add(new ImageIcon(Main.class.getResource("../imgs/home/gacha/data/frame_04_mint_1.png")));
-		memory.add(new ImageIcon(Main.class.getResource("../imgs/home/gacha/data/00.png")));
-		memory.add(new ImageIcon(Main.class.getResource("../imgs/home/gacha/data/01.png")));
-		memory.add(new ImageIcon(Main.class.getResource("../imgs/home/gacha/data/02.png")));
-		memory.add(new ImageIcon(Main.class.getResource("../imgs/home/gacha/data/03.png")));
-		memory.add(new ImageIcon(Main.class.getResource("../imgs/home/gacha/data/04.png")));
-		memory.add(new ImageIcon(Main.class.getResource("../imgs/home/gacha/data/05.png")));
-		memory.add(new ImageIcon(Main.class.getResource("../imgs/home/gacha/data/06_2.png")));
-		memory.add(new ImageIcon(Main.class.getResource("../imgs/home/gacha/data/07.png")));
-		memory.add(new ImageIcon(Main.class.getResource("../imgs/home/gacha/data/08_2.png")));
-		memory.add(new ImageIcon(Main.class.getResource("../imgs/home/gacha/data/09_2.png")));
-		memory.add(new ImageIcon(Main.class.getResource("../imgs/home/gacha/data/10.png")));
-		memory.add(new ImageIcon(Main.class.getResource("../imgs/home/gacha/data/11.png")));
-		memory.add(new ImageIcon(Main.class.getResource("../imgs/home/gacha/data/12.png")));
-		memory.add(new ImageIcon(Main.class.getResource("../imgs/home/gacha/data/13.png")));
-		memory.add(new ImageIcon(Main.class.getResource("../imgs/home/gacha/data/14.png")));
-		memory.add(new ImageIcon(Main.class.getResource("../imgs/home/gacha/data/15.png")));
-		memory.add(new ImageIcon(Main.class.getResource("../imgs/home/gacha/data/16.png")));
-		memory.add(new ImageIcon(Main.class.getResource("../imgs/home/gacha/data/17.png")));
-		memory.add(new ImageIcon(Main.class.getResource("../imgs/home/gacha/data/18.png")));
-		memory.add(new ImageIcon(Main.class.getResource("../imgs/home/gacha/data/19.png")));
+
 		int repeat;
-		for (int i = 0; i < memory.size(); i++) {
+		for (int i = 0; i < Character.getMemoryListSize(); i++) {
 			if (i == 6) {
 				repeat = 2;
 			} else if (i == 8) {
@@ -107,7 +85,6 @@ public class MemoryPickUpBox extends JPanel {
 		closeGetmemoryWindowButton.setBorderPainted(false);
 		closeGetmemoryWindowButton.setContentAreaFilled(false);
 		closeGetmemoryWindowButton.setFocusPainted(false);
-		//		closeGetmemoryWindowButton.addActionListener(this);
 		closeGetmemoryWindowButton.addMouseListener(new MouseAdapter() {
 			public void mouseEntered(MouseEvent e) {
 				closeGetmemoryWindowButton.setIcon(closeGetmemoryWindowButtonEntered);
@@ -119,16 +96,14 @@ public class MemoryPickUpBox extends JPanel {
 			}
 			public void mousePressed(MouseEvent e) {
 				if (Home.isGachaWindowOpened) {
-					Home.isGachaWindowOpened = false;
 					closeGetmemoryWindowButton.setVisible(false);
-//					setVisible(false);
-//					remove(this);
-//					remove();
-					if (!Home.openGetMemoryWindowButton.isVisible()) {
-						Home.openGetMemoryWindowButton.setVisible(true);
+					if (!Home.buttons.getOpenGetMemoryWindowButton().isVisible()) {
+						Home.buttons.getOpenGetMemoryWindowButton().setVisible(true);
 					}
 					windowBackground = windowBackgroundDefault;
 					Home.closeBox();
+					Home.isGachaWindowOpened = false;
+
 				}
 			}
 		});
@@ -153,14 +128,15 @@ public class MemoryPickUpBox extends JPanel {
 				recoverButton.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 			}
 			public void mousePressed(MouseEvent e) {
-				windowBackground = windowBackgroundLoading;
 				closeGetmemoryWindowButton.setVisible(false);
-				Home.openGetMemoryWindowButton.setVisible(false);
+				Home.buttons.getOpenGetMemoryWindowButton().setVisible(false);
 				recoverButton.setVisible(false);
 				if (Home.player.getCurrChips() >= 1000) {
+					windowBackground = windowBackgroundLoading;
 					Home.player.setCurrChips(Home.player.getCurrChips() - 1000);
 					proceedRecovering();
 				} else {
+					closeGetmemoryWindowButton.setVisible(true);
 					// show unRecoverable message
 				}
 			}
@@ -187,7 +163,7 @@ public class MemoryPickUpBox extends JPanel {
 				r = (int)(Math.random() * 10000 % memoryField.size());
 				picked = memoryField.get(r);
 				Home.player.addToMemoryKeep(picked);
-				p.setIcon(memory.get(picked));
+				p.setIcon(Character.getMemoryList().get(picked));
 				p.setOpaque(false);
 
 				frame = new JLabel();
@@ -214,20 +190,8 @@ public class MemoryPickUpBox extends JPanel {
 
 	@Override
 	protected void paintComponent(Graphics g) {
-		// TODO Auto-generated method stub
 		super.paintComponent(g);
 		g.drawImage(windowBackground, 0, 0, null);
 	}
-
-	//	@Override
-	//	public void actionPerformed(ActionEvent e) {
-	//		System.out.println("EnteredActionListener: " + tmpInt++);
-	//		
-	//		
-	//	}
-
-	//	class myListener extends MouseAdapter {
-	//		
-	//	}
 
 }
